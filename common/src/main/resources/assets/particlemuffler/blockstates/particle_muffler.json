@@ -1,0 +1,7 @@
+{
+  "variants": {
+    "": {
+      "model": "particlemuffler:block/particle_muffler"
+    }
+  }
+}

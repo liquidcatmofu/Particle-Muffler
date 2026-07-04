@@ -284,24 +284,25 @@ MVPでは `sectionRadius` を使用する。
 デフォルト:
 
 ```text
-sectionRadius = 1
+sectionRadius = 0
 ```
 
-これは中心sectionを含めて、周囲 3x3x3 sections を抑制する。
+これは Particle Muffler が設置された section のみを抑制する。
 
-つまり、最大で以下の範囲。
+つまり、デフォルトでは以下の範囲。
 
 ```text
-3 * 16 = 48 blocks per axis
+1 * 16 = 16 blocks per axis
 ```
 
-ただし、これは正確な半径48ブロックではなく、section単位で丸ごと抑制される。
+ただし、これは正確な半径16ブロックではなく、section単位で丸ごと抑制される。
+`sectionRadius = 1` の場合は、中心sectionを含めて周囲 3x3x3 sections が対象になる。
 
 configで指定可能にする。
 
 ```toml
 [general]
-defaultSectionRadius = 1
+defaultSectionRadius = 0
 maxSectionRadius = 2
 redstoneDisables = true
 ```
@@ -435,6 +436,8 @@ public final class ParticleMufflerClientRegistry {
 ### 13.3 clear
 
 ワールド離脱・サーバー切断・ディメンション変更時に呼ぶ。
+Architectury の client lifecycle / client player event で level load、client stopping、client player quit を捕捉し、registry を clear する。
+同一ワールド内のチャンクアンロード漏れに備えて、低頻度の client level tick で存在しない BlockEntity entry を pruning してよい。
 
 ```text
 entriesByPos.clear()
@@ -535,14 +538,20 @@ MVPで必要なconfig。
 
 ```toml
 [general]
-defaultSectionRadius = 1
+defaultSectionRadius = 0
 maxSectionRadius = 2
 redstoneDisables = true
+
+[client]
+pruningIntervalTicks = 20
 
 [compat]
 particleEngineMixinOrder = 1100
 particleEngineMixinPriority = 1100
 ```
+
+`pruningIntervalTicks` は、クライアント側registryから存在しないBlockEntity entryを掃除する間隔。
+TOMLファイルは `config/particlemuffler.toml` に生成する。
 
 ただし、Mixinの `order` / `priority` は通常のゲーム内configで動的変更できない。
 そのため、MVPではコード定数として `1100` を使用してよい。

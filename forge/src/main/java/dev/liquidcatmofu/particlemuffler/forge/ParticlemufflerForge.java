@@ -1,7 +1,10 @@
 package dev.liquidcatmofu.particlemuffler.forge;
 
-import dev.liquidcatmofu.particlemuffler.Particlemuffler;
 import dev.architectury.platform.forge.EventBuses;
+import dev.architectury.utils.Env;
+import dev.architectury.utils.EnvExecutor;
+import dev.liquidcatmofu.particlemuffler.Particlemuffler;
+import dev.liquidcatmofu.particlemuffler.client.ParticlemufflerClient;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 
@@ -13,5 +16,6 @@ public final class ParticlemufflerForge {
 
         // Run our common setup.
         Particlemuffler.init();
+        EnvExecutor.runInEnv(Env.CLIENT, () -> ParticlemufflerClient::init);
     }
 }
