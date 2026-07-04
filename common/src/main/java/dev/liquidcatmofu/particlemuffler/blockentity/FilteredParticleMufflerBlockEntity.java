@@ -1,6 +1,8 @@
 package dev.liquidcatmofu.particlemuffler.blockentity;
 
+import dev.architectury.registry.menu.ExtendedMenuProvider;
 import dev.liquidcatmofu.particlemuffler.client.ParticleMufflerClientRegistry;
+import dev.liquidcatmofu.particlemuffler.menu.FilteredParticleMufflerMenu;
 import dev.liquidcatmofu.particlemuffler.registry.ModBlockEntities;
 import java.util.Collections;
 import java.util.HashSet;
@@ -10,10 +12,15 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.StringTag;
 import net.minecraft.nbt.Tag;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.level.block.state.BlockState;
 
-public final class FilteredParticleMufflerBlockEntity extends ParticleMufflerBlockEntity {
+public final class FilteredParticleMufflerBlockEntity extends ParticleMufflerBlockEntity implements ExtendedMenuProvider {
     private static final String FILTER_MODE_TAG = "FilterMode";
     private static final String PARTICLE_IDS_TAG = "ParticleIds";
 
@@ -87,5 +94,25 @@ public final class FilteredParticleMufflerBlockEntity extends ParticleMufflerBlo
         }
 
         ParticleMufflerClientRegistry.addOrUpdateFiltered(worldPosition, getSectionRadius(), isEnabled(), filterMode, particleIds);
+    }
+
+    @Override
+    public Component getDisplayName() {
+        return Component.translatable("block.particlemuffler.filtered_particle_muffler");
+    }
+
+    @Override
+    public AbstractContainerMenu createMenu(int containerId, Inventory inventory, Player player) {
+        return FilteredParticleMufflerMenu.fromBlockEntity(containerId, this);
+    }
+
+    @Override
+    public void saveExtraData(FriendlyByteBuf buffer) {
+        buffer.writeBlockPos(worldPosition);
+        buffer.writeUtf(filterMode.name());
+        buffer.writeVarInt(particleIds.size());
+        for (ResourceLocation particleId : particleIds) {
+            buffer.writeResourceLocation(particleId);
+        }
     }
 }

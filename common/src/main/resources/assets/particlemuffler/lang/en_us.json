@@ -1,4 +1,10 @@
 {
   "block.particlemuffler.particle_muffler": "Particle Muffler",
-  "block.particlemuffler.filtered_particle_muffler": "Filtered Particle Muffler"
+  "block.particlemuffler.filtered_particle_muffler": "Filtered Particle Muffler",
+  "screen.particlemuffler.filtered_particle_muffler.add": "Add",
+  "screen.particlemuffler.filtered_particle_muffler.entries": "Particles",
+  "screen.particlemuffler.filtered_particle_muffler.filter_mode": "Filter mode",
+  "screen.particlemuffler.filtered_particle_muffler.mode.blacklist": "Blacklist",
+  "screen.particlemuffler.filtered_particle_muffler.mode.whitelist": "Whitelist",
+  "screen.particlemuffler.filtered_particle_muffler.particle_id": "Particle ID"
 }

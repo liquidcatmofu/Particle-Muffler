@@ -178,14 +178,13 @@ MVP後に、必要であれば以下を追加する。
 - Filtered Particle Muffler ブロック
 - FilterMode と粒子IDリストのNBT保存
 - client registry のフィルタ付きentry対応
-- GUIなしで、BlockEntity NBT による動作確認を行う段階
+- 右クリックGUIで FilterMode と粒子IDリストを編集
+- C2S packet によるサーバー同期
 ```
 
 未実装:
 
 ```text
-- GUI
-- フィルタ編集操作
 - 最近見た粒子リスト
 ```
 

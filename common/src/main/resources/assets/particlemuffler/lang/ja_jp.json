@@ -1,4 +1,10 @@
 {
   "block.particlemuffler.particle_muffler": "パーティクルマフラー",
-  "block.particlemuffler.filtered_particle_muffler": "フィルター付きパーティクルマフラー"
+  "block.particlemuffler.filtered_particle_muffler": "フィルター付きパーティクルマフラー",
+  "screen.particlemuffler.filtered_particle_muffler.add": "追加",
+  "screen.particlemuffler.filtered_particle_muffler.entries": "パーティクル",
+  "screen.particlemuffler.filtered_particle_muffler.filter_mode": "フィルターモード",
+  "screen.particlemuffler.filtered_particle_muffler.mode.blacklist": "ブラックリスト",
+  "screen.particlemuffler.filtered_particle_muffler.mode.whitelist": "ホワイトリスト",
+  "screen.particlemuffler.filtered_particle_muffler.particle_id": "パーティクルID"
 }
