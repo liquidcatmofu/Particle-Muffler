@@ -6,5 +6,9 @@
   "screen.particlemuffler.filtered_particle_muffler.filter_mode": "Filter mode",
   "screen.particlemuffler.filtered_particle_muffler.mode.blacklist": "Blacklist",
   "screen.particlemuffler.filtered_particle_muffler.mode.whitelist": "Whitelist",
-  "screen.particlemuffler.filtered_particle_muffler.particle_id": "Particle ID"
+  "screen.particlemuffler.filtered_particle_muffler.particle_id": "Particle ID",
+  "tooltip.particlemuffler.particle_muffler.range": "Suppresses all particles in the 16x16x16 section containing the block.",
+  "tooltip.particlemuffler.particle_muffler.redstone": "Redstone signal disables suppression.",
+  "tooltip.particlemuffler.filtered_particle_muffler.range": "Suppresses selected particles in the 16x16x16 section containing the block.",
+  "tooltip.particlemuffler.filtered_particle_muffler.redstone": "Right-click to edit filters. Redstone signal disables suppression."
 }

@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "SWS",
+    "WRW",
+    "SWS"
+  ],
+  "key": {
+    "S": {
+      "item": "minecraft:stone"
+    },
+    "W": {
+      "tag": "minecraft:wool"
+    },
+    "R": {
+      "item": "minecraft:redstone"
+    }
+  },
+  "result": {
+    "item": "particlemuffler:particle_muffler"
+  }
+}

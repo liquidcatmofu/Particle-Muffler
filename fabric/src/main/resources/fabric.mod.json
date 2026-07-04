@@ -2,16 +2,12 @@
   "schemaVersion": 1,
   "id": "particlemuffler",
   "version": "${version}",
-  "name": "ParticleMuffler",
-  "description": "",
+  "name": "Particle Muffler",
+  "description": "Client-side area particle suppression with block-based and filtered mufflers.",
   "authors": [
-    ""
+    "liquidcatmofu"
   ],
-  "contact": {
-    "homepage": ""
-  },
-  "license": "LGPL-3.0",
-  "icon": "assets/particlemuffler/icon.png",
+  "license": "LGPL-3.0-only",
   "environment": "*",
   "entrypoints": {
     "main": [
@@ -30,8 +26,5 @@
     "java": ">=17",
     "architectury": ">=9.2.14",
     "fabric-api": "*"
-  },
-  "suggests": {
-    "another-mod": "*"
   }
 }

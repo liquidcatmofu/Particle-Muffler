@@ -168,11 +168,11 @@ Fastest option for performance-focused setups.
 軽量化重視の設備向けです。
 ```
 
-## 7. 将来追加するブロック
+## 7. 追加ブロック
 
-MVP後に、必要であれば以下を追加する。
+MVP後に、以下を追加した。
 
-実装開始済み:
+実装済み:
 
 ```text
 - Filtered Particle Muffler ブロック
@@ -793,10 +793,6 @@ Codexは以下の順序で実装する。
 以下はMVP後に実装する。
 
 ```text
-- Filtered Particle Muffler
-- BLACKLIST / WHITELIST
-- GUI
-- 粒子ID選択UI
 - 最近見た粒子リスト
 - 範囲可視化
 - ClientLevel#addDestroyBlockEffect 対応

@@ -22,7 +22,7 @@ public final class ParticlemufflerClient {
         }
 
         initialized = true;
-        MenuRegistry.registerScreenFactory(ModMenus.FILTERED_PARTICLE_MUFFLER.get(), FilteredParticleMufflerScreen::new);
+        ClientLifecycleEvent.CLIENT_SETUP.register(client -> MenuRegistry.registerScreenFactory(ModMenus.FILTERED_PARTICLE_MUFFLER.get(), FilteredParticleMufflerScreen::new));
         ClientLifecycleEvent.CLIENT_LEVEL_LOAD.register(level -> ParticleMufflerClientRegistry.clear());
         ClientLifecycleEvent.CLIENT_STOPPING.register(client -> ParticleMufflerClientRegistry.clear());
         ClientPlayerEvent.CLIENT_PLAYER_QUIT.register(player -> ParticleMufflerClientRegistry.clear());

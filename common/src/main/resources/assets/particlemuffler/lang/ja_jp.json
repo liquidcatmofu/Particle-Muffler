@@ -6,5 +6,9 @@
   "screen.particlemuffler.filtered_particle_muffler.filter_mode": "フィルターモード",
   "screen.particlemuffler.filtered_particle_muffler.mode.blacklist": "ブラックリスト",
   "screen.particlemuffler.filtered_particle_muffler.mode.whitelist": "ホワイトリスト",
-  "screen.particlemuffler.filtered_particle_muffler.particle_id": "パーティクルID"
+  "screen.particlemuffler.filtered_particle_muffler.particle_id": "パーティクルID",
+  "tooltip.particlemuffler.particle_muffler.range": "ブロックがある16x16x16の区画内の全パーティクルを抑制します。",
+  "tooltip.particlemuffler.particle_muffler.redstone": "レッドストーン信号入力中は抑制を無効化します。",
+  "tooltip.particlemuffler.filtered_particle_muffler.range": "ブロックがある16x16x16の区画内で、指定したパーティクルを抑制します。",
+  "tooltip.particlemuffler.filtered_particle_muffler.redstone": "右クリックでフィルターを編集します。レッドストーン信号入力中は抑制を無効化します。"
 }

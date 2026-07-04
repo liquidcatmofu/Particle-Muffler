@@ -1,6 +1,6 @@
 {
   "parent": "minecraft:block/cube_all",
   "textures": {
-    "all": "minecraft:block/polished_deepslate"
+    "all": "particlemuffler:block/particle_muffler"
   }
 }
