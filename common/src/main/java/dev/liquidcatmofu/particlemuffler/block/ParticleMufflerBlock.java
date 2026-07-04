@@ -12,7 +12,7 @@ import net.minecraft.world.level.block.entity.BlockEntityTicker;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 
-public final class ParticleMufflerBlock extends BaseEntityBlock {
+public class ParticleMufflerBlock extends BaseEntityBlock {
     public ParticleMufflerBlock(Properties properties) {
         super(properties);
     }

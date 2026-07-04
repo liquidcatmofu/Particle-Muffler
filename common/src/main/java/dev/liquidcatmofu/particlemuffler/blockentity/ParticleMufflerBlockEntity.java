@@ -8,9 +8,10 @@ import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.util.Mth;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 
-public final class ParticleMufflerBlockEntity extends BlockEntity {
+public class ParticleMufflerBlockEntity extends BlockEntity {
     private static final String SECTION_RADIUS_TAG = "SectionRadius";
     private static final String ENABLED_TAG = "Enabled";
     private static final int DEFAULT_SECTION_RADIUS = 0;
@@ -21,6 +22,10 @@ public final class ParticleMufflerBlockEntity extends BlockEntity {
 
     public ParticleMufflerBlockEntity(BlockPos pos, BlockState state) {
         super(ModBlockEntities.PARTICLE_MUFFLER.get(), pos, state);
+    }
+
+    protected ParticleMufflerBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
+        super(type, pos, state);
     }
 
     public static void tick(Level level, BlockPos pos, BlockState state, ParticleMufflerBlockEntity blockEntity) {
@@ -80,7 +85,7 @@ public final class ParticleMufflerBlockEntity extends BlockEntity {
         super.setRemoved();
     }
 
-    private void setChangedAndSync() {
+    protected void setChangedAndSync() {
         setChanged();
         if (level != null) {
             level.sendBlockUpdated(worldPosition, getBlockState(), getBlockState(), 3);
@@ -88,7 +93,7 @@ public final class ParticleMufflerBlockEntity extends BlockEntity {
         updateClientRegistry();
     }
 
-    private void updateClientRegistry() {
+    protected void updateClientRegistry() {
         if (level == null || !level.isClientSide) {
             return;
         }

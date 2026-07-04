@@ -3,6 +3,7 @@ package dev.liquidcatmofu.particlemuffler.registry;
 import dev.architectury.registry.registries.DeferredRegister;
 import dev.architectury.registry.registries.RegistrySupplier;
 import dev.liquidcatmofu.particlemuffler.Particlemuffler;
+import dev.liquidcatmofu.particlemuffler.block.FilteredParticleMufflerBlock;
 import dev.liquidcatmofu.particlemuffler.block.ParticleMufflerBlock;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.world.level.block.Block;
@@ -17,6 +18,15 @@ public final class ModBlocks {
             "particle_muffler",
             () -> new ParticleMufflerBlock(BlockBehaviour.Properties.of()
                     .mapColor(MapColor.COLOR_GRAY)
+                    .strength(2.0F, 6.0F)
+                    .sound(SoundType.METAL)
+                    .requiresCorrectToolForDrops())
+    );
+
+    public static final RegistrySupplier<FilteredParticleMufflerBlock> FILTERED_PARTICLE_MUFFLER = BLOCKS.register(
+            "filtered_particle_muffler",
+            () -> new FilteredParticleMufflerBlock(BlockBehaviour.Properties.of()
+                    .mapColor(MapColor.COLOR_LIGHT_BLUE)
                     .strength(2.0F, 6.0F)
                     .sound(SoundType.METAL)
                     .requiresCorrectToolForDrops())

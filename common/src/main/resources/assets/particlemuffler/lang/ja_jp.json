@@ -1,3 +1,4 @@
 {
-  "block.particlemuffler.particle_muffler": "パーティクルマフラー"
+  "block.particlemuffler.particle_muffler": "パーティクルマフラー",
+  "block.particlemuffler.filtered_particle_muffler": "フィルター付きパーティクルマフラー"
 }

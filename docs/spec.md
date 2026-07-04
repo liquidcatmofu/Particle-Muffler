@@ -172,6 +172,23 @@ Fastest option for performance-focused setups.
 
 MVP後に、必要であれば以下を追加する。
 
+実装開始済み:
+
+```text
+- Filtered Particle Muffler ブロック
+- FilterMode と粒子IDリストのNBT保存
+- client registry のフィルタ付きentry対応
+- GUIなしで、BlockEntity NBT による動作確認を行う段階
+```
+
+未実装:
+
+```text
+- GUI
+- フィルタ編集操作
+- 最近見た粒子リスト
+```
+
 ### 7.1 Filtered Particle Muffler
 
 フィルタ付き上位版。
@@ -191,6 +208,13 @@ public enum FilterMode {
     BLACKLIST,
     WHITELIST
 }
+```
+
+NBT:
+
+```text
+FilterMode: "BLACKLIST" | "WHITELIST"
+ParticleIds: string list, e.g. ["minecraft:flame", "minecraft:smoke"]
 ```
 
 意味:

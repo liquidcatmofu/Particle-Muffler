@@ -18,11 +18,17 @@ public final class ModItems {
             () -> new BlockItem(ModBlocks.PARTICLE_MUFFLER.get(), new Item.Properties())
     );
 
+    public static final RegistrySupplier<BlockItem> FILTERED_PARTICLE_MUFFLER = ITEMS.register(
+            "filtered_particle_muffler",
+            () -> new BlockItem(ModBlocks.FILTERED_PARTICLE_MUFFLER.get(), new Item.Properties())
+    );
+
     private ModItems() {
     }
 
     public static void register() {
         ITEMS.register();
         CreativeTabRegistry.append(CreativeModeTabs.FUNCTIONAL_BLOCKS, PARTICLE_MUFFLER);
+        CreativeTabRegistry.append(CreativeModeTabs.FUNCTIONAL_BLOCKS, FILTERED_PARTICLE_MUFFLER);
     }
 }

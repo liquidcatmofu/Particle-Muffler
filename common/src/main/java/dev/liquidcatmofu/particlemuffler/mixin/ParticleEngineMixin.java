@@ -3,6 +3,7 @@ package dev.liquidcatmofu.particlemuffler.mixin;
 import dev.liquidcatmofu.particlemuffler.client.ParticleMufflerClientRegistry;
 import net.minecraft.client.particle.Particle;
 import net.minecraft.client.particle.ParticleEngine;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.particles.ParticleOptions;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -22,7 +23,13 @@ public abstract class ParticleEngineMixin {
             double velocityZ,
             CallbackInfoReturnable<Particle> cir
     ) {
-        if (ParticleMufflerClientRegistry.isSuppressedFast(x, y, z)) {
+        if (ParticleMufflerClientRegistry.isUnfilteredSuppressedFast(x, y, z)) {
+            cir.setReturnValue(null);
+            return;
+        }
+
+        if (ParticleMufflerClientRegistry.hasAnyFilteredMuffler()
+                && ParticleMufflerClientRegistry.isFilteredSuppressedFast(BuiltInRegistries.PARTICLE_TYPE.getKey(options.getType()), x, y, z)) {
             cir.setReturnValue(null);
         }
     }
