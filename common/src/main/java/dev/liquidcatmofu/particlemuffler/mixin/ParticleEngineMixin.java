@@ -1,6 +1,7 @@
 package dev.liquidcatmofu.particlemuffler.mixin;
 
 import dev.liquidcatmofu.particlemuffler.client.ParticleMufflerClientRegistry;
+import dev.liquidcatmofu.particlemuffler.client.ParticleInspection;
 import net.minecraft.client.particle.Particle;
 import net.minecraft.client.particle.ParticleEngine;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -31,6 +32,11 @@ public abstract class ParticleEngineMixin {
         if (ParticleMufflerClientRegistry.hasAnyFilteredMuffler()
                 && ParticleMufflerClientRegistry.isFilteredSuppressedFast(BuiltInRegistries.PARTICLE_TYPE.getKey(options.getType()), x, y, z)) {
             cir.setReturnValue(null);
+            return;
+        }
+
+        if (ParticleInspection.isActive()) {
+            ParticleInspection.record(BuiltInRegistries.PARTICLE_TYPE.getKey(options.getType()));
         }
     }
 }
