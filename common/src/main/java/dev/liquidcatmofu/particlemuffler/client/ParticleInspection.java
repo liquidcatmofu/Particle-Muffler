@@ -21,6 +21,9 @@ import net.minecraft.resources.ResourceLocation;
 public final class ParticleInspection {
     private static final List<String> ORDERS = List.of("recent", "count", "name");
     private static final int TICKS_PER_SECOND = 20;
+    private static final int DEFAULT_SECONDS = 5;
+    private static final int DEFAULT_RESULTS = 32;
+    private static final Order DEFAULT_ORDER = Order.COUNT;
     private static final int MIN_SECONDS = 1;
     private static final int MAX_SECONDS = 30;
     private static final int MIN_RESULTS = 1;
@@ -73,8 +76,19 @@ public final class ParticleInspection {
     private static void register(CommandDispatcher<ClientCommandRegistrationEvent.ClientCommandSourceStack> dispatcher) {
         dispatcher.register(ClientCommandRegistrationEvent.literal("particlemuffler")
                 .then(ClientCommandRegistrationEvent.literal("inspect")
+                        .executes(context -> start(context.getSource(), DEFAULT_SECONDS, DEFAULT_RESULTS, DEFAULT_ORDER))
                         .then(ClientCommandRegistrationEvent.argument("time", IntegerArgumentType.integer(MIN_SECONDS, MAX_SECONDS))
+                                .executes(context -> start(
+                                        context.getSource(),
+                                        IntegerArgumentType.getInteger(context, "time"),
+                                        DEFAULT_RESULTS,
+                                        DEFAULT_ORDER))
                                 .then(ClientCommandRegistrationEvent.argument("max-number", IntegerArgumentType.integer(MIN_RESULTS, MAX_RESULTS))
+                                        .executes(context -> start(
+                                                context.getSource(),
+                                                IntegerArgumentType.getInteger(context, "time"),
+                                                IntegerArgumentType.getInteger(context, "max-number"),
+                                                DEFAULT_ORDER))
                                         .then(ClientCommandRegistrationEvent.argument("order", StringArgumentType.word())
                                                 .suggests((context, builder) -> SharedSuggestionProvider.suggest(ORDERS, builder))
                                                 .executes(context -> start(
@@ -84,6 +98,13 @@ public final class ParticleInspection {
                                                         StringArgumentType.getString(context, "order"))))))));
     }
 
+    private static int start(ClientCommandRegistrationEvent.ClientCommandSourceStack source, int seconds, int maxResults, Order order) {
+        activeSession = new Session(seconds * TICKS_PER_SECOND, maxResults, order);
+        source.arch$sendSuccess(() -> Component.literal("Inspecting visible particles for " + seconds + "s...")
+                .withStyle(ChatFormatting.GRAY), false);
+        return 1;
+    }
+
     private static int start(ClientCommandRegistrationEvent.ClientCommandSourceStack source, int seconds, int maxResults, String orderName) {
         Order order = Order.fromName(orderName);
         if (order == null) {
@@ -91,10 +112,7 @@ public final class ParticleInspection {
             return 0;
         }
 
-        activeSession = new Session(seconds * TICKS_PER_SECOND, maxResults, order);
-        source.arch$sendSuccess(() -> Component.literal("Inspecting visible particles for " + seconds + "s...")
-                .withStyle(ChatFormatting.GRAY), false);
-        return 1;
+        return start(source, seconds, maxResults, order);
     }
 
     private enum Order {
