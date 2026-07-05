@@ -3,6 +3,7 @@ package dev.liquidcatmofu.particlemuffler.client;
 import dev.architectury.event.events.client.ClientLifecycleEvent;
 import dev.architectury.event.events.client.ClientPlayerEvent;
 import dev.architectury.event.events.client.ClientTickEvent;
+import dev.architectury.platform.Platform;
 import dev.architectury.registry.menu.MenuRegistry;
 import dev.liquidcatmofu.particlemuffler.client.gui.FilteredParticleMufflerScreen;
 import dev.liquidcatmofu.particlemuffler.config.ParticleMufflerConfig;
@@ -22,7 +23,11 @@ public final class ParticlemufflerClient {
         }
 
         initialized = true;
-        ClientLifecycleEvent.CLIENT_SETUP.register(client -> MenuRegistry.registerScreenFactory(ModMenus.FILTERED_PARTICLE_MUFFLER.get(), FilteredParticleMufflerScreen::new));
+        if (Platform.isFabric()) {
+            registerScreens();
+        } else {
+            ClientLifecycleEvent.CLIENT_SETUP.register(client -> registerScreens());
+        }
         ClientLifecycleEvent.CLIENT_LEVEL_LOAD.register(level -> ParticleMufflerClientRegistry.clear());
         ClientLifecycleEvent.CLIENT_STOPPING.register(client -> ParticleMufflerClientRegistry.clear());
         ClientPlayerEvent.CLIENT_PLAYER_QUIT.register(player -> ParticleMufflerClientRegistry.clear());
@@ -37,5 +42,9 @@ public final class ParticlemufflerClient {
 
         cleanupTicks = 0;
         ParticleMufflerClientRegistry.removeMissingBlockEntities(level);
+    }
+
+    private static void registerScreens() {
+        MenuRegistry.registerScreenFactory(ModMenus.FILTERED_PARTICLE_MUFFLER.get(), FilteredParticleMufflerScreen::new);
     }
 }
