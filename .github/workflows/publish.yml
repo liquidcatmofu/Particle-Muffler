@@ -52,7 +52,10 @@ jobs:
             CHANGELOG="$RELEASE_CHANGELOG"
           fi
 
+          MC_VERSION="$(awk -F= '/^minecraft_version[[:space:]]*=/{gsub(/[[:space:]]/, "", $2); print $2; exit}' gradle.properties)"
+
           printf 'version=%s\n' "$VERSION" >> "$GITHUB_OUTPUT"
+          printf 'minecraft_version=%s\n' "$MC_VERSION" >> "$GITHUB_OUTPUT"
           printf 'version_type=%s\n' "$VERSION_TYPE" >> "$GITHUB_OUTPUT"
           {
             printf 'changelog<<EOF\n'
@@ -78,11 +81,11 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           gh release upload "$GITHUB_REF_NAME" \
-            "fabric/build/libs/particlemuffler-fabric-${{ steps.meta.outputs.version }}.jar" \
-            "forge/build/libs/particlemuffler-forge-${{ steps.meta.outputs.version }}.jar" \
+            "fabric/build/libs/particlemuffler-fabric-${{ steps.meta.outputs.minecraft_version }}-${{ steps.meta.outputs.version }}.jar" \
+            "forge/build/libs/particlemuffler-forge-${{ steps.meta.outputs.minecraft_version }}-${{ steps.meta.outputs.version }}.jar" \
             --clobber
 
-      - name: Publish Fabric
+      - name: Publish
         uses: Kir-Antipov/mc-publish@v3.3
         with:
           modrinth-id: ${{ vars.MODRINTH_PROJECT_ID }}
@@ -90,44 +93,21 @@ jobs:
           curseforge-id: ${{ vars.CURSEFORGE_PROJECT_ID }}
           curseforge-token: ${{ secrets.CURSEFORGE_TOKEN }}
 
-          name: Particle Muffler ${{ steps.meta.outputs.version }} Fabric
-          version: ${{ steps.meta.outputs.version }}-fabric
+          name: Particle Muffler ${{ steps.meta.outputs.version }}
+          version: ${{ steps.meta.outputs.version }}
           version-type: ${{ steps.meta.outputs.version_type }}
           changelog: ${{ steps.meta.outputs.changelog }}
 
           files: |
-            fabric/build/libs/particlemuffler-fabric-${{ steps.meta.outputs.version }}.jar
+            fabric/build/libs/particlemuffler-fabric-${{ steps.meta.outputs.minecraft_version }}-${{ steps.meta.outputs.version }}.jar
+            forge/build/libs/particlemuffler-forge-${{ steps.meta.outputs.minecraft_version }}-${{ steps.meta.outputs.version }}.jar
 
           loaders: |
             fabric
-
-          game-versions: |
-            1.20.1
-
-          java: |
-            17
-
-      - name: Publish Forge
-        uses: Kir-Antipov/mc-publish@v3.3
-        with:
-          modrinth-id: ${{ vars.MODRINTH_PROJECT_ID }}
-          modrinth-token: ${{ secrets.MODRINTH_TOKEN }}
-          curseforge-id: ${{ vars.CURSEFORGE_PROJECT_ID }}
-          curseforge-token: ${{ secrets.CURSEFORGE_TOKEN }}
-
-          name: Particle Muffler ${{ steps.meta.outputs.version }} Forge
-          version: ${{ steps.meta.outputs.version }}-forge
-          version-type: ${{ steps.meta.outputs.version_type }}
-          changelog: ${{ steps.meta.outputs.changelog }}
-
-          files: |
-            forge/build/libs/particlemuffler-forge-${{ steps.meta.outputs.version }}.jar
-
-          loaders: |
             forge
 
           game-versions: |
-            1.20.1
+            ${{ steps.meta.outputs.minecraft_version }}
 
           java: |
             17
