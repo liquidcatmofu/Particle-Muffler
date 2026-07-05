@@ -23,7 +23,7 @@ on:
         required: true
 
 permissions:
-  contents: read
+  contents: write
 
 jobs:
   publish:
@@ -71,6 +71,16 @@ jobs:
 
       - name: Build
         run: ./gradlew build --no-daemon
+
+      - name: Upload GitHub release assets
+        if: github.event_name == 'release'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh release upload "$GITHUB_REF_NAME" \
+            "fabric/build/libs/particlemuffler-fabric-${{ steps.meta.outputs.version }}.jar" \
+            "forge/build/libs/particlemuffler-forge-${{ steps.meta.outputs.version }}.jar" \
+            --clobber
 
       - name: Publish Fabric
         uses: Kir-Antipov/mc-publish@v3.3
