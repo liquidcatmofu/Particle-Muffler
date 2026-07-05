@@ -1,5 +1,8 @@
 # Particle Muffler
 
+[![CurseForge Downloads](https://img.shields.io/curseforge/dt/1598597?style=flat-square&logo=curseforge&logoColor=white&label=CurseForge)](https://www.curseforge.com/minecraft/mc-mods/particle-muffler)
+[![Modrinth Downloads](https://img.shields.io/modrinth/dt/particle-muffler?style=flat-square&logo=modrinth&logoColor=white&label=Modrinth)](https://modrinth.com/mod/particle-muffler)
+
 Particle Muffler is a Minecraft 1.20.1 mod that suppresses particles around placed muffler blocks on the client side.
 
 It is intended for performance-focused setups such as factories, farms, mob grinders, and magic or tech mod builds where local particle spam becomes distracting or expensive.
