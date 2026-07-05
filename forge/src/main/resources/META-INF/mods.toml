@@ -7,7 +7,7 @@ license = "LGPL-3.0-only"
 modId = "particlemuffler"
 version = "${version}"
 displayName = "Particle Muffler"
-authors = "liquidcatmofu"
+authors = "LiquidCatMofu"
 description = '''
 Client-side area particle suppression with block-based and filtered mufflers.
 '''

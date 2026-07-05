@@ -1,0 +1,52 @@
+name: Build
+
+on:
+  push:
+    branches:
+      - main
+      - master
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    name: Gradle Build
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 21
+
+      - name: Set up Gradle
+        uses: gradle/actions/setup-gradle@v4
+
+      - name: Build
+        run: ./gradlew build --no-daemon
+
+      - name: Upload Fabric artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: particlemuffler-fabric
+          path: |
+            fabric/build/libs/particlemuffler-fabric-*.jar
+            !fabric/build/libs/*-sources.jar
+            !fabric/build/libs/*-dev-shadow.jar
+          if-no-files-found: error
+
+      - name: Upload Forge artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: particlemuffler-forge
+          path: |
+            forge/build/libs/particlemuffler-forge-*.jar
+            !forge/build/libs/*-sources.jar
+            !forge/build/libs/*-dev-shadow.jar
+          if-no-files-found: error

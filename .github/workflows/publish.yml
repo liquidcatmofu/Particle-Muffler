@@ -1,0 +1,100 @@
+name: Publish
+
+on:
+  release:
+    types:
+      - published
+  workflow_dispatch:
+    inputs:
+      version:
+        description: Version to publish, without a leading v
+        required: true
+      version_type:
+        description: Modrinth/CurseForge version type
+        required: true
+        default: release
+        type: choice
+        options:
+          - release
+          - beta
+          - alpha
+      changelog:
+        description: Release changelog
+        required: true
+
+permissions:
+  contents: read
+
+jobs:
+  publish:
+    name: Publish to Modrinth and CurseForge
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Resolve release metadata
+        id: meta
+        env:
+          INPUT_VERSION: ${{ inputs.version }}
+          INPUT_VERSION_TYPE: ${{ inputs.version_type }}
+          INPUT_CHANGELOG: ${{ inputs.changelog }}
+          RELEASE_CHANGELOG: ${{ github.event.release.body }}
+        run: |
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            VERSION="$INPUT_VERSION"
+            VERSION_TYPE="$INPUT_VERSION_TYPE"
+            CHANGELOG="$INPUT_CHANGELOG"
+          else
+            VERSION="${GITHUB_REF_NAME#v}"
+            VERSION_TYPE="release"
+            CHANGELOG="$RELEASE_CHANGELOG"
+          fi
+
+          printf 'version=%s\n' "$VERSION" >> "$GITHUB_OUTPUT"
+          printf 'version_type=%s\n' "$VERSION_TYPE" >> "$GITHUB_OUTPUT"
+          {
+            printf 'changelog<<EOF\n'
+            printf '%s\n' "$CHANGELOG"
+            printf 'EOF\n'
+          } >> "$GITHUB_OUTPUT"
+
+      - name: Set up Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 21
+
+      - name: Set up Gradle
+        uses: gradle/actions/setup-gradle@v4
+
+      - name: Build
+        run: ./gradlew build --no-daemon
+
+      - name: Publish
+        uses: Kir-Antipov/mc-publish@v3.3
+        with:
+          modrinth-id: ${{ vars.MODRINTH_PROJECT_ID }}
+          modrinth-token: ${{ secrets.MODRINTH_TOKEN }}
+          curseforge-id: ${{ vars.CURSEFORGE_PROJECT_ID }}
+          curseforge-token: ${{ secrets.CURSEFORGE_TOKEN }}
+
+          name: Particle Muffler ${{ steps.meta.outputs.version }}
+          version: ${{ steps.meta.outputs.version }}
+          version-type: ${{ steps.meta.outputs.version_type }}
+          changelog: ${{ steps.meta.outputs.changelog }}
+
+          files: |
+            fabric/build/libs/particlemuffler-fabric-${{ steps.meta.outputs.version }}.jar
+            forge/build/libs/particlemuffler-forge-${{ steps.meta.outputs.version }}.jar
+
+          loaders: |
+            fabric
+            forge
+
+          game-versions: |
+            1.20.1
+
+          java: |
+            17

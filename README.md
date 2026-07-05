@@ -85,6 +85,26 @@ fabric/
 forge/
 ```
 
+## Release
+
+GitHub Actions builds with Java 21 while compiling Java 17 compatible mod jars.
+
+To publish releases from GitHub Actions, configure repository variables:
+
+```text
+MODRINTH_PROJECT_ID
+CURSEFORGE_PROJECT_ID
+```
+
+And repository secrets:
+
+```text
+MODRINTH_TOKEN
+CURSEFORGE_TOKEN
+```
+
+Publishing runs when a GitHub Release is published. It can also be started manually from the `Publish` workflow.
+
 ## License
 
 This project is licensed under the GNU Lesser General Public License v3.0.
