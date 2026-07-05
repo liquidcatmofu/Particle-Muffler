@@ -28,10 +28,18 @@ public final class ParticlemufflerClient {
         } else {
             ClientLifecycleEvent.CLIENT_SETUP.register(client -> registerScreens());
         }
-        ClientLifecycleEvent.CLIENT_LEVEL_LOAD.register(level -> ParticleMufflerClientRegistry.clear());
-        ClientLifecycleEvent.CLIENT_STOPPING.register(client -> ParticleMufflerClientRegistry.clear());
-        ClientPlayerEvent.CLIENT_PLAYER_QUIT.register(player -> ParticleMufflerClientRegistry.clear());
+        ClientLifecycleEvent.CLIENT_LEVEL_LOAD.register(level -> clearClientRegistry());
+        ClientLifecycleEvent.CLIENT_STOPPING.register(client -> clearClientRegistry());
+        ClientPlayerEvent.CLIENT_PLAYER_QUIT.register(player -> clearClientRegistry());
+        ClientTickEvent.CLIENT_POST.register(ParticleInspection::tick);
         ClientTickEvent.CLIENT_LEVEL_POST.register(ParticlemufflerClient::cleanupMissingBlockEntities);
+        ParticleInspection.registerCommands();
+    }
+
+    private static void clearClientRegistry() {
+        cleanupTicks = 0;
+        ParticleMufflerClientRegistry.clear();
+        ParticleInspection.clear();
     }
 
     private static void cleanupMissingBlockEntities(ClientLevel level) {
