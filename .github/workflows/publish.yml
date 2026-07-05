@@ -85,7 +85,7 @@ jobs:
             "neoforge/build/libs/particlemuffler-neoforge-${{ steps.meta.outputs.minecraft_version }}-${{ steps.meta.outputs.version }}.jar" \
             --clobber
 
-      - name: Publish
+      - name: Publish Fabric
         uses: Kir-Antipov/mc-publish@v3.3
         with:
           modrinth-id: ${{ vars.MODRINTH_PROJECT_ID }}
@@ -93,17 +93,40 @@ jobs:
           curseforge-id: ${{ vars.CURSEFORGE_PROJECT_ID }}
           curseforge-token: ${{ secrets.CURSEFORGE_TOKEN }}
 
-          name: Particle Muffler ${{ steps.meta.outputs.version }}
-          version: ${{ steps.meta.outputs.version }}
+          name: Particle Muffler Fabric ${{ steps.meta.outputs.minecraft_version }}-${{ steps.meta.outputs.version }}
+          version: fabric-${{ steps.meta.outputs.minecraft_version }}-${{ steps.meta.outputs.version }}
           version-type: ${{ steps.meta.outputs.version_type }}
           changelog: ${{ steps.meta.outputs.changelog }}
 
           files: |
             fabric/build/libs/particlemuffler-fabric-${{ steps.meta.outputs.minecraft_version }}-${{ steps.meta.outputs.version }}.jar
-            neoforge/build/libs/particlemuffler-neoforge-${{ steps.meta.outputs.minecraft_version }}-${{ steps.meta.outputs.version }}.jar
 
           loaders: |
             fabric
+
+          game-versions: |
+            ${{ steps.meta.outputs.minecraft_version }}
+
+          java: |
+            21
+
+      - name: Publish NeoForge
+        uses: Kir-Antipov/mc-publish@v3.3
+        with:
+          modrinth-id: ${{ vars.MODRINTH_PROJECT_ID }}
+          modrinth-token: ${{ secrets.MODRINTH_TOKEN }}
+          curseforge-id: ${{ vars.CURSEFORGE_PROJECT_ID }}
+          curseforge-token: ${{ secrets.CURSEFORGE_TOKEN }}
+
+          name: Particle Muffler NeoForge ${{ steps.meta.outputs.minecraft_version }}-${{ steps.meta.outputs.version }}
+          version: neoforge-${{ steps.meta.outputs.minecraft_version }}-${{ steps.meta.outputs.version }}
+          version-type: ${{ steps.meta.outputs.version_type }}
+          changelog: ${{ steps.meta.outputs.changelog }}
+
+          files: |
+            neoforge/build/libs/particlemuffler-neoforge-${{ steps.meta.outputs.minecraft_version }}-${{ steps.meta.outputs.version }}.jar
+
+          loaders: |
             neoforge
 
           game-versions: |
