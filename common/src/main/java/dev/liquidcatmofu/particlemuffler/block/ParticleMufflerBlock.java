@@ -1,5 +1,6 @@
 package dev.liquidcatmofu.particlemuffler.block;
 
+import com.mojang.serialization.MapCodec;
 import dev.liquidcatmofu.particlemuffler.blockentity.ParticleMufflerBlockEntity;
 import dev.liquidcatmofu.particlemuffler.registry.ModBlockEntities;
 import net.minecraft.core.BlockPos;
@@ -13,8 +14,15 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 
 public class ParticleMufflerBlock extends BaseEntityBlock {
+    public static final MapCodec<ParticleMufflerBlock> CODEC = simpleCodec(ParticleMufflerBlock::new);
+
     public ParticleMufflerBlock(Properties properties) {
         super(properties);
+    }
+
+    @Override
+    protected MapCodec<? extends BaseEntityBlock> codec() {
+        return CODEC;
     }
 
     @Override

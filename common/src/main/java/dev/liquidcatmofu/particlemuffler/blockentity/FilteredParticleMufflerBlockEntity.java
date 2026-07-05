@@ -8,6 +8,7 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.StringTag;
@@ -59,8 +60,8 @@ public final class FilteredParticleMufflerBlockEntity extends ParticleMufflerBlo
     }
 
     @Override
-    protected void saveAdditional(CompoundTag tag) {
-        super.saveAdditional(tag);
+    protected void saveAdditional(CompoundTag tag, HolderLookup.Provider registries) {
+        super.saveAdditional(tag, registries);
         tag.putString(FILTER_MODE_TAG, filterMode.name());
 
         ListTag particleIdTags = new ListTag();
@@ -71,8 +72,8 @@ public final class FilteredParticleMufflerBlockEntity extends ParticleMufflerBlo
     }
 
     @Override
-    public void load(CompoundTag tag) {
-        super.load(tag);
+    protected void loadAdditional(CompoundTag tag, HolderLookup.Provider registries) {
+        loadMufflerData(tag);
         filterMode = tag.contains(FILTER_MODE_TAG) ? FilterMode.byName(tag.getString(FILTER_MODE_TAG)) : FilterMode.BLACKLIST;
         particleIds.clear();
 

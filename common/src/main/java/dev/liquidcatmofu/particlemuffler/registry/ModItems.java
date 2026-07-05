@@ -13,8 +13,6 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.TooltipFlag;
-import net.minecraft.world.level.Level;
-import org.jetbrains.annotations.Nullable;
 
 public final class ModItems {
     private static final DeferredRegister<Item> ITEMS = DeferredRegister.create(Particlemuffler.MOD_ID, Registries.ITEM);
@@ -47,7 +45,7 @@ public final class ModItems {
         }
 
         @Override
-        public void appendHoverText(ItemStack stack, @Nullable Level level, List<Component> tooltip, TooltipFlag flag) {
+        public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> tooltip, TooltipFlag flag) {
             tooltip.add(Component.translatable("tooltip.particlemuffler." + tooltipKey + ".range"));
             tooltip.add(Component.translatable("tooltip.particlemuffler." + tooltipKey + ".redstone"));
         }

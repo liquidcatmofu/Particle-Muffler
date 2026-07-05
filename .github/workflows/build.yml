@@ -3,6 +3,7 @@ name: Build
 on:
   push:
     branches:
+      - '1.21.1'
       - main
       - master
   pull_request:
@@ -41,12 +42,12 @@ jobs:
             !fabric/build/libs/*-dev-shadow.jar
           if-no-files-found: error
 
-      - name: Upload Forge artifact
+      - name: Upload NeoForge artifact
         uses: actions/upload-artifact@v4
         with:
-          name: particlemuffler-forge
+          name: particlemuffler-neoforge
           path: |
-            forge/build/libs/particlemuffler-forge-*.jar
-            !forge/build/libs/*-sources.jar
-            !forge/build/libs/*-dev-shadow.jar
+            neoforge/build/libs/particlemuffler-neoforge-*.jar
+            !neoforge/build/libs/*-sources.jar
+            !neoforge/build/libs/*-dev-shadow.jar
           if-no-files-found: error

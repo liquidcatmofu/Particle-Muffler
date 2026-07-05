@@ -3,7 +3,6 @@ package dev.liquidcatmofu.particlemuffler.client;
 import dev.architectury.event.events.client.ClientLifecycleEvent;
 import dev.architectury.event.events.client.ClientPlayerEvent;
 import dev.architectury.event.events.client.ClientTickEvent;
-import dev.architectury.platform.Platform;
 import dev.architectury.registry.menu.MenuRegistry;
 import dev.liquidcatmofu.particlemuffler.client.gui.FilteredParticleMufflerScreen;
 import dev.liquidcatmofu.particlemuffler.config.ParticleMufflerConfig;
@@ -23,15 +22,15 @@ public final class ParticlemufflerClient {
         }
 
         initialized = true;
-        if (Platform.isFabric()) {
-            registerScreens();
-        } else {
-            ClientLifecycleEvent.CLIENT_SETUP.register(client -> registerScreens());
-        }
-        ClientLifecycleEvent.CLIENT_LEVEL_LOAD.register(level -> ParticleMufflerClientRegistry.clear());
-        ClientLifecycleEvent.CLIENT_STOPPING.register(client -> ParticleMufflerClientRegistry.clear());
-        ClientPlayerEvent.CLIENT_PLAYER_QUIT.register(player -> ParticleMufflerClientRegistry.clear());
+        ClientLifecycleEvent.CLIENT_LEVEL_LOAD.register(level -> clearClientRegistry());
+        ClientLifecycleEvent.CLIENT_STOPPING.register(client -> clearClientRegistry());
+        ClientPlayerEvent.CLIENT_PLAYER_QUIT.register(player -> clearClientRegistry());
         ClientTickEvent.CLIENT_LEVEL_POST.register(ParticlemufflerClient::cleanupMissingBlockEntities);
+    }
+
+    private static void clearClientRegistry() {
+        cleanupTicks = 0;
+        ParticleMufflerClientRegistry.clear();
     }
 
     private static void cleanupMissingBlockEntities(ClientLevel level) {
@@ -44,7 +43,7 @@ public final class ParticlemufflerClient {
         ParticleMufflerClientRegistry.removeMissingBlockEntities(level);
     }
 
-    private static void registerScreens() {
+    public static void registerScreens() {
         MenuRegistry.registerScreenFactory(ModMenus.FILTERED_PARTICLE_MUFFLER.get(), FilteredParticleMufflerScreen::new);
     }
 }

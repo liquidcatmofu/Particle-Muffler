@@ -6,6 +6,7 @@ import net.fabricmc.api.ClientModInitializer;
 public final class ParticlemufflerFabricClient implements ClientModInitializer {
     @Override
     public void onInitializeClient() {
+        ParticlemufflerClient.registerScreens();
         ParticlemufflerClient.init();
     }
 }

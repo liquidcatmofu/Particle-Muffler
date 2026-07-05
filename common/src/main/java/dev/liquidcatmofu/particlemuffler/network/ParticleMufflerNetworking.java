@@ -8,11 +8,12 @@ import java.util.HashSet;
 import java.util.Set;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 
 public final class ParticleMufflerNetworking {
-    public static final ResourceLocation UPDATE_FILTERED_MUFFLER = new ResourceLocation(Particlemuffler.MOD_ID, "update_filtered_muffler");
+    public static final ResourceLocation UPDATE_FILTERED_MUFFLER = ResourceLocation.fromNamespaceAndPath(Particlemuffler.MOD_ID, "update_filtered_muffler");
     private static final int MAX_PARTICLE_IDS = 128;
 
     private ParticleMufflerNetworking() {
@@ -37,7 +38,7 @@ public final class ParticleMufflerNetworking {
         }
     }
 
-    private static void receiveUpdateFilteredMuffler(FriendlyByteBuf buffer, NetworkManager.PacketContext context) {
+    private static void receiveUpdateFilteredMuffler(RegistryFriendlyByteBuf buffer, NetworkManager.PacketContext context) {
         BlockPos pos = buffer.readBlockPos();
         FilterMode filterMode = FilterMode.byName(buffer.readUtf());
         int count = buffer.readVarInt();

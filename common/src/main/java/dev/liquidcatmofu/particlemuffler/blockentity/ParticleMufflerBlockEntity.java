@@ -3,6 +3,7 @@ package dev.liquidcatmofu.particlemuffler.blockentity;
 import dev.liquidcatmofu.particlemuffler.client.ParticleMufflerClientRegistry;
 import dev.liquidcatmofu.particlemuffler.registry.ModBlockEntities;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.util.Mth;
@@ -52,24 +53,28 @@ public class ParticleMufflerBlockEntity extends BlockEntity {
     }
 
     @Override
-    protected void saveAdditional(CompoundTag tag) {
-        super.saveAdditional(tag);
+    protected void saveAdditional(CompoundTag tag, HolderLookup.Provider registries) {
+        super.saveAdditional(tag, registries);
         tag.putInt(SECTION_RADIUS_TAG, sectionRadius);
         tag.putBoolean(ENABLED_TAG, enabled);
     }
 
     @Override
-    public void load(CompoundTag tag) {
-        super.load(tag);
-        int savedSectionRadius = tag.contains(SECTION_RADIUS_TAG) ? tag.getInt(SECTION_RADIUS_TAG) : DEFAULT_SECTION_RADIUS;
-        sectionRadius = Mth.clamp(savedSectionRadius, 0, MAX_SECTION_RADIUS);
-        enabled = !tag.contains(ENABLED_TAG) || tag.getBoolean(ENABLED_TAG);
+    protected void loadAdditional(CompoundTag tag, HolderLookup.Provider registries) {
+        super.loadAdditional(tag, registries);
+        loadMufflerData(tag);
         updateClientRegistry();
     }
 
+    protected final void loadMufflerData(CompoundTag tag) {
+        int savedSectionRadius = tag.contains(SECTION_RADIUS_TAG) ? tag.getInt(SECTION_RADIUS_TAG) : DEFAULT_SECTION_RADIUS;
+        sectionRadius = Mth.clamp(savedSectionRadius, 0, MAX_SECTION_RADIUS);
+        enabled = !tag.contains(ENABLED_TAG) || tag.getBoolean(ENABLED_TAG);
+    }
+
     @Override
-    public CompoundTag getUpdateTag() {
-        return saveWithoutMetadata();
+    public CompoundTag getUpdateTag(HolderLookup.Provider registries) {
+        return saveWithoutMetadata(registries);
     }
 
     @Override

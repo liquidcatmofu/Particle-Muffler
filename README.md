@@ -1,15 +1,15 @@
 # Particle Muffler
 
-Particle Muffler is a Minecraft 1.20.1 mod that suppresses particles around placed muffler blocks on the client side.
+Particle Muffler is a Minecraft 1.21.1 mod that suppresses particles around placed muffler blocks on the client side.
 
 It is intended for performance-focused setups such as factories, farms, mob grinders, and magic or tech mod builds where local particle spam becomes distracting or expensive.
 
 ## Supported Platforms
 
-- Minecraft 1.20.1
+- Minecraft 1.21.1
 - Fabric
-- Forge
-- Java 17
+- NeoForge
+- Java 21
 - Architectury
 
 ## Blocks
@@ -82,12 +82,12 @@ The project uses an Architectury multi-loader layout:
 ```text
 common/
 fabric/
-forge/
+neoforge/
 ```
 
 ## Release
 
-GitHub Actions builds with Java 21 while compiling Java 17 compatible mod jars.
+GitHub Actions builds with Java 21.
 
 To publish releases from GitHub Actions, configure repository variables:
 

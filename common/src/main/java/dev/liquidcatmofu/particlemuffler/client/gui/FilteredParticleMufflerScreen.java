@@ -14,6 +14,7 @@ import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
@@ -74,7 +75,7 @@ public final class FilteredParticleMufflerScreen extends AbstractContainerScreen
 
     @Override
     public void render(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-        renderBackground(guiGraphics);
+        renderBackground(guiGraphics, mouseX, mouseY, partialTick);
         super.render(guiGraphics, mouseX, mouseY, partialTick);
         renderTooltip(guiGraphics, mouseX, mouseY);
     }
@@ -241,8 +242,12 @@ public final class FilteredParticleMufflerScreen extends AbstractContainerScreen
     }
 
     private void sendUpdate() {
-        FriendlyByteBuf buffer = new FriendlyByteBuf(Unpooled.buffer());
+        if (minecraft == null || minecraft.level == null) {
+            return;
+        }
+
+        FriendlyByteBuf buffer = new RegistryFriendlyByteBuf(Unpooled.buffer(), minecraft.level.registryAccess());
         ParticleMufflerNetworking.writeUpdateFilteredMuffler(buffer, menu.getBlockPos(), filterMode, particleIds);
-        NetworkManager.sendToServer(ParticleMufflerNetworking.UPDATE_FILTERED_MUFFLER, buffer);
+        NetworkManager.sendToServer(ParticleMufflerNetworking.UPDATE_FILTERED_MUFFLER, (RegistryFriendlyByteBuf) buffer);
     }
 }
