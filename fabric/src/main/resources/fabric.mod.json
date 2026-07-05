@@ -8,6 +8,7 @@
     "liquidcatmofu"
   ],
   "license": "LGPL-3.0-only",
+  "icon": "particlemuffler.png",
   "environment": "*",
   "entrypoints": {
     "main": [

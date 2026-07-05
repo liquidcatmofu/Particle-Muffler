@@ -11,6 +11,7 @@ authors = "liquidcatmofu"
 description = '''
 Client-side area particle suppression with block-based and filtered mufflers.
 '''
+logoFile = "particlemuffler.png"
 
 [[dependencies.particlemuffler]]
 modId = "forge"
