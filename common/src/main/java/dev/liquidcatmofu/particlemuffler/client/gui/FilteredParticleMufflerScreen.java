@@ -4,17 +4,15 @@ import dev.architectury.networking.NetworkManager;
 import dev.liquidcatmofu.particlemuffler.blockentity.FilterMode;
 import dev.liquidcatmofu.particlemuffler.menu.FilteredParticleMufflerMenu;
 import dev.liquidcatmofu.particlemuffler.network.ParticleMufflerNetworking;
-import io.netty.buffer.Unpooled;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Set;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
@@ -246,8 +244,6 @@ public final class FilteredParticleMufflerScreen extends AbstractContainerScreen
             return;
         }
 
-        FriendlyByteBuf buffer = new RegistryFriendlyByteBuf(Unpooled.buffer(), minecraft.level.registryAccess());
-        ParticleMufflerNetworking.writeUpdateFilteredMuffler(buffer, menu.getBlockPos(), filterMode, particleIds);
-        NetworkManager.sendToServer(ParticleMufflerNetworking.UPDATE_FILTERED_MUFFLER, (RegistryFriendlyByteBuf) buffer);
+        NetworkManager.sendToServer(new ParticleMufflerNetworking.UpdateFilteredMufflerPayload(menu.getBlockPos(), filterMode, Set.copyOf(particleIds)));
     }
 }

@@ -7,62 +7,72 @@ import dev.liquidcatmofu.particlemuffler.blockentity.FilteredParticleMufflerBloc
 import java.util.HashSet;
 import java.util.Set;
 import net.minecraft.core.BlockPos;
-import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 
 public final class ParticleMufflerNetworking {
-    public static final ResourceLocation UPDATE_FILTERED_MUFFLER = ResourceLocation.fromNamespaceAndPath(Particlemuffler.MOD_ID, "update_filtered_muffler");
+    private static final ResourceLocation UPDATE_FILTERED_MUFFLER_ID = ResourceLocation.fromNamespaceAndPath(Particlemuffler.MOD_ID, "update_filtered_muffler");
     private static final int MAX_PARTICLE_IDS = 128;
 
     private ParticleMufflerNetworking() {
     }
 
     public static void register() {
-        NetworkManager.registerReceiver(NetworkManager.c2s(), UPDATE_FILTERED_MUFFLER, ParticleMufflerNetworking::receiveUpdateFilteredMuffler);
+        NetworkManager.registerReceiver(NetworkManager.c2s(), UpdateFilteredMufflerPayload.TYPE, UpdateFilteredMufflerPayload.STREAM_CODEC, ParticleMufflerNetworking::receiveUpdateFilteredMuffler);
     }
 
-    public static void writeUpdateFilteredMuffler(FriendlyByteBuf buffer, BlockPos pos, FilterMode filterMode, Iterable<ResourceLocation> particleIds) {
-        buffer.writeBlockPos(pos);
-        buffer.writeUtf(filterMode.name());
-
-        int size = 0;
-        for (ResourceLocation ignored : particleIds) {
-            size++;
-        }
-
-        buffer.writeVarInt(size);
-        for (ResourceLocation particleId : particleIds) {
-            buffer.writeResourceLocation(particleId);
-        }
-    }
-
-    private static void receiveUpdateFilteredMuffler(RegistryFriendlyByteBuf buffer, NetworkManager.PacketContext context) {
-        BlockPos pos = buffer.readBlockPos();
-        FilterMode filterMode = FilterMode.byName(buffer.readUtf());
-        int count = buffer.readVarInt();
-        Set<ResourceLocation> particleIds = new HashSet<>();
-        for (int index = 0; index < count; index++) {
-            ResourceLocation particleId = buffer.readResourceLocation();
-            if (particleIds.size() < MAX_PARTICLE_IDS) {
-                particleIds.add(particleId);
-            }
-        }
-
+    private static void receiveUpdateFilteredMuffler(UpdateFilteredMufflerPayload payload, NetworkManager.PacketContext context) {
         context.queue(() -> {
             if (!(context.getPlayer() instanceof ServerPlayer player)) {
                 return;
             }
 
+            BlockPos pos = payload.pos();
             if (player.distanceToSqr(pos.getX() + 0.5D, pos.getY() + 0.5D, pos.getZ() + 0.5D) > 64.0D) {
                 return;
             }
 
             if (player.level().getBlockEntity(pos) instanceof FilteredParticleMufflerBlockEntity blockEntity) {
-                blockEntity.setFilterMode(filterMode);
-                blockEntity.setParticleIds(particleIds);
+                blockEntity.setFilterMode(payload.filterMode());
+                blockEntity.setParticleIds(payload.particleIds());
             }
         });
+    }
+
+    public record UpdateFilteredMufflerPayload(BlockPos pos, FilterMode filterMode, Set<ResourceLocation> particleIds) implements CustomPacketPayload {
+        public static final Type<UpdateFilteredMufflerPayload> TYPE = new Type<>(UPDATE_FILTERED_MUFFLER_ID);
+        public static final StreamCodec<RegistryFriendlyByteBuf, UpdateFilteredMufflerPayload> STREAM_CODEC = StreamCodec.ofMember(UpdateFilteredMufflerPayload::write, UpdateFilteredMufflerPayload::read);
+
+        private static UpdateFilteredMufflerPayload read(RegistryFriendlyByteBuf buffer) {
+            BlockPos pos = buffer.readBlockPos();
+            FilterMode filterMode = FilterMode.byName(buffer.readUtf());
+            int count = buffer.readVarInt();
+            Set<ResourceLocation> particleIds = new HashSet<>();
+            for (int index = 0; index < count; index++) {
+                ResourceLocation particleId = buffer.readResourceLocation();
+                if (particleIds.size() < MAX_PARTICLE_IDS) {
+                    particleIds.add(particleId);
+                }
+            }
+
+            return new UpdateFilteredMufflerPayload(pos, filterMode, Set.copyOf(particleIds));
+        }
+
+        private void write(RegistryFriendlyByteBuf buffer) {
+            buffer.writeBlockPos(pos);
+            buffer.writeUtf(filterMode.name());
+            buffer.writeVarInt(particleIds.size());
+            for (ResourceLocation particleId : particleIds) {
+                buffer.writeResourceLocation(particleId);
+            }
+        }
+
+        @Override
+        public Type<? extends CustomPacketPayload> type() {
+            return TYPE;
+        }
     }
 }
