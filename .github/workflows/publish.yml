@@ -47,7 +47,11 @@ jobs:
             VERSION_TYPE="$INPUT_VERSION_TYPE"
             CHANGELOG="$INPUT_CHANGELOG"
           else
-            VERSION="${GITHUB_REF_NAME#v}"
+            if [[ "$GITHUB_REF_NAME" == *-v* ]]; then
+              VERSION="${GITHUB_REF_NAME##*-v}"
+            else
+              VERSION="${GITHUB_REF_NAME#v}"
+            fi
             VERSION_TYPE="release"
             CHANGELOG="$RELEASE_CHANGELOG"
           fi
